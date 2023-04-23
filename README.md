@@ -22,6 +22,46 @@ pip install metaseg
 ```python
 from metaseg import SegAutoMaskPredictor, SegManualMaskPredictor
 
+# CLI Masker
+
+The `cli_masker.py` script is a command-line interface for segmenting objects in images and videos using the SegAutoMaskPredictor class. It allows you to generate object masks for images and videos and save the results as individual files.
+
+## Prerequisites
+
+- Python 3.6 or higher
+- OpenCV
+- PyTorch
+- torchvision
+- tqdm
+- Pillow
+
+## Usage
+
+To use the `cli_masker.py` script, you need to provide the required arguments as follows:
+
+For images:
+
+```bash
+python cli_masker.py /path/to/image.jpg --model_type vit_l --points_per_side 16 --points_per_batch 64 --min_area 1000 --output_folder /path/to/output/folder --show --save
+
+For videos:
+
+python cli_masker.py /path/to/video.mov --model_type vit_l --points_per_side 16 --points_per_batch 64 --min_area 1000 --output_folder /path/to/output/folder
+
+Arguments
+source: The path to the input image or video file.
+--model_type: The type of model to use for segmentation. Options are vit_l, vit_h, and vit_b. (default: vit_l)
+--points_per_side: The number of points per side to sample for the mask generation process. (default: 16)
+--points_per_batch: The number of points to process in each batch during mask generation. (default: 64)
+--min_area: The minimum area for a mask to be considered valid. (default: 1000)
+--output_folder: The path to the folder where the output files will be saved. (default: output)
+--show: (Image only) Display the result. (optional)
+--save: (Image only) Save the result. (optional)
+Output
+The script will output individual files for each segmented object. In the case of images, the output will be image files with segmented object masks. For videos, the output will be video files with object masks for each object.
+
+The output files will be saved in the specified output_folder and will be named as object_{i}.ext where {i} is the object index and ext is the file extension (.jpg for images and .mp4 for videos).
+
 # If gpu memory is not enough, reduce the points_per_side and points_per_batch.
 
 # For image
