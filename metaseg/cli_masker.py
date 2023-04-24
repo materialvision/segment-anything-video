@@ -88,7 +88,10 @@ class SegAutoMaskPredictor:
         video_writers = []  # To store VideoWriter objects
         written_frames = []
 
-        for frame_idx in tqdm(range(length)):
+        if end_frame is None:
+            end_frame = length
+
+        for frame_idx in tqdm(range(start_frame, end_frame)):
             ret, frame = cap.read()
             if not ret:
                 break
@@ -145,6 +148,9 @@ def main():
     parser.add_argument("--output_folder", default="output", help="Path to the output folder.")
     parser.add_argument("--show", action="store_true", help="Display the result.")
     parser.add_argument("--save", action="store_true", help="Save the result.")
+    parser.add_argument("--start_frame", type=int, default=0, help="Start frame for processing the video.")
+    parser.add_argument("--end_frame", type=int, default=None, help="End frame for processing the video.")
+
     args = parser.parse_args()
 
     if not os.path.exists(args.source):
@@ -174,10 +180,13 @@ def main():
             points_per_batch=args.points_per_batch,
             min_area=args.min_area,
             output_folder=args.output_folder,
+            start_frame=args.start_frame,
+            end_frame=args.end_frame,
         )
+
 
 if __name__ == "__main__":
     main()
 
 #python cli_masker.py /path/to/image.jpg --model_type vit_l --points_per_side 16 --points_per_batch 64 --min_area 0 --output_folder /path/to/output/folder --save
-#python cli_masker.py /path/to/video.mov --model_type vit_l --points_per_side 16 --points_per_batch 64 --min_area 1000 --output_folder /path/to/output/folder
+#python cli_masker.py /path/to/video.mov --model_type vit_l --points_per_side 16 --points_per_batch 64 --min_area 1000 --output_folder /path/to/output/folder --start_frame=0 --end_frame=None
