@@ -88,6 +88,11 @@ class SegAutoMaskPredictor:
         video_writers = []  # To store VideoWriter objects
         written_frames = []
 
+        model = self.load_model(model_type)
+        mask_generator = SamAutomaticMaskGenerator(
+            model, points_per_side=points_per_side, points_per_batch=points_per_batch, min_mask_region_area=min_area
+        )
+
         if end_frame is None:
             end_frame = length
 
@@ -96,10 +101,6 @@ class SegAutoMaskPredictor:
             if not ret:
                 break
 
-            model = self.load_model(model_type)
-            mask_generator = SamAutomaticMaskGenerator(
-                model, points_per_side=points_per_side, points_per_batch=points_per_batch, min_mask_region_area=min_area
-            )
             masks = mask_generator.generate(frame)
 
             if len(masks) == 0:
