@@ -2,6 +2,7 @@ from typing import Any, Dict, List, Optional
 
 import os
 import argparse
+from collections import defaultdict
 import sys
 import cv2
 import numpy as np
