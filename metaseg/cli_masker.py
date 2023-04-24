@@ -75,7 +75,7 @@ class SegAutoMaskPredictor:
 
         return masks
     
-    def video_predict(self, source, model_type, points_per_side, points_per_batch, min_area, output_folder="output"):
+    def video_predict(self, source, model_type, points_per_side, points_per_batch, min_area, output_folder="output", start_frame, end_frame):
         cap = custom_load_video(source)
         length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
