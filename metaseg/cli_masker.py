@@ -98,6 +98,7 @@ class SegAutoMaskPredictor:
             end_frame = length
 
         written_frames = defaultdict(bool)
+        cap.set(cv2.CAP_PROP_POS_FRAMES, start_frame)  # Set the initial position of the video capture
 
         for frame_idx in tqdm(range(start_frame, end_frame)):
             ret, frame = cap.read()
