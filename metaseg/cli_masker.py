@@ -113,20 +113,21 @@ class SegAutoMaskPredictor:
                 img = np.zeros((m.shape[0], m.shape[1], 3), dtype=np.uint8)
                 img[m > 0] = [255, 255, 255]  # Set the mask color to white
 
+                # Generate black frames only for frames between start_frame and the first frame with masks
                 if len(video_writers) <= i:
+                    # Create a black frame
+                    black_frame = np.zeros((height, width, 3), dtype=np.uint8)
+
                     output_path = os.path.join(output_folder, f"object_{i + 1}.mp4")
                     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
                     video_writer = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
                     video_writers.append(video_writer)
-                    written_frames.append(0)
 
-                while written_frames[i] < frame_idx:
-                    black_frame = np.zeros((height, width, 3), dtype=np.uint8)
-                    video_writers[i].write(black_frame)
-                    written_frames[i] += 1
+                    # Write black frames from start_frame to the current frame with masks
+                    for _ in range(start_frame, frame_idx):
+                        video_writers[i].write(black_frame)
 
                 video_writers[i].write(img)
-                written_frames[i] += 1
 
         cap.release()
 
