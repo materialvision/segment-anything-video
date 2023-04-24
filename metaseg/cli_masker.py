@@ -96,15 +96,14 @@ class SegAutoMaskPredictor:
         if end_frame is None:
             end_frame = length
 
+        written_frames = defaultdict(bool)
+
         for frame_idx in tqdm(range(start_frame, end_frame)):
             ret, frame = cap.read()
             if not ret:
                 break
 
             masks = mask_generator.generate(frame)
-
-            if len(masks) == 0:
-                continue
 
             sorted_anns = sorted(masks, key=(lambda x: x["area"]), reverse=True)
 
@@ -113,7 +112,6 @@ class SegAutoMaskPredictor:
                 img = np.zeros((m.shape[0], m.shape[1], 3), dtype=np.uint8)
                 img[m > 0] = [255, 255, 255]  # Set the mask color to white
 
-                # Generate black frames only for frames between start_frame and the first frame with masks
                 if len(video_writers) <= i:
                     # Create a black frame
                     black_frame = np.zeros((height, width, 3), dtype=np.uint8)
@@ -123,9 +121,11 @@ class SegAutoMaskPredictor:
                     video_writer = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
                     video_writers.append(video_writer)
 
+                if not written_frames[i]:
                     # Write black frames from start_frame to the current frame with masks
                     for _ in range(start_frame, frame_idx):
                         video_writers[i].write(black_frame)
+                    written_frames[i] = True
 
                 video_writers[i].write(img)
 
