@@ -75,7 +75,7 @@ class SegAutoMaskPredictor:
 
         return masks
     
-    def video_predict(self, source, model_type, points_per_side, points_per_batch, min_area, output_folder="output", start_frame, end_frame):
+    def video_predict(self, source, model_type, points_per_side, points_per_batch, min_area, start_frame, end_frame, output_folder="output"):
         cap = custom_load_video(source)
         length = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 
@@ -146,10 +146,11 @@ def main():
     parser.add_argument("--points_per_batch", type=int, default=64, help="Number of points per batch.")
     parser.add_argument("--min_area", type=int, default=1000, help="Minimum area of the objects to be segmented.")
     parser.add_argument("--output_folder", default="output", help="Path to the output folder.")
-    parser.add_argument("--show", action="store_true", help="Display the result.")
-    parser.add_argument("--save", action="store_true", help="Save the result.")
     parser.add_argument("--start_frame", type=int, default=0, help="Start frame for processing the video.")
     parser.add_argument("--end_frame", type=int, default=None, help="End frame for processing the video.")
+    parser.add_argument("--show", action="store_true", help="Display the result.")
+    parser.add_argument("--save", action="store_true", help="Save the result.")
+
 
     args = parser.parse_args()
 
@@ -179,9 +180,9 @@ def main():
             points_per_side=args.points_per_side,
             points_per_batch=args.points_per_batch,
             min_area=args.min_area,
-            output_folder=args.output_folder,
             start_frame=args.start_frame,
             end_frame=args.end_frame,
+            output_folder=args.output_folder,
         )
 
 
